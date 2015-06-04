@@ -8,6 +8,7 @@ The goal of the workshop is to provide hands on experience with some of the asse
 Some of the examples are similar to the ones provided in the AssertJ official documentation and others extend them in order to keep clear focus on the goal and workshop flow transparent.
 
 Flow:
+
 1. Examine in each test in the test package, ideally following test classes in alphabetical order.
 2. Replace every JUnit/Hamcrest assertion with AssertJ assertion, most of the multiline assertions can be replaced with one line AssertJ assertion.
 3. Refactor all tests to use BDD API of [AssertJ][bdd-assertj] and [Mockito][bdd-mockito].
