@@ -61,21 +61,9 @@ public class BasicAssertionsTest {
     }
 
     @Test
-    public void fellowshipOfTheRingShouldNotContainSaruman() {
-
-        assertFalse(fellowshipOfTheRing.contains(new SimpleCharacter("Saruman")));
-    }
-
-    @Test
     public void shouldBeEqual() {
 
         assertEquals(frodo, new SimpleCharacter("Frodo"));
-    }
-
-    @Test
-    public void shouldNotBeEqual() {
-
-        assertNotEquals(frodo, new SimpleCharacter("Elrond"));
     }
 
     @Test
