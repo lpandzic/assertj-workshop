@@ -67,7 +67,7 @@ public class MapAssertionsTest {
 	}
 
 	@Test
-	public void threeRingsShouldBeBearedByGandalfElrondAndGaladriel() {
+	public void threeRingsShouldBeBearedByGandalfElrondAndGaladrielAndNotFrodo() {
 
 		// given
 		when(ringRepository.findRingByName("Narya")).thenReturn(narya);
@@ -85,11 +85,12 @@ public class MapAssertionsTest {
 		// then
 		assertThat(threeRingBearers, hasEntry(narya, gandalf));
 		assertThat(threeRingBearers, hasEntry(nenya, galadriel));
+		assertThat(threeRingBearers, hasEntry(vilya, elrond));
 		assertThat(threeRingBearers, not(hasEntry(frodo, oneRing)));
 	}
 
 	@Test
-	public void gandalfAndGaladrielShouldBeOneOfTheOneRingBearers() {
+	public void gandalfAndGaladrielShouldBeOneOfTheThreeRingBearers() {
 
 		// given
 		when(ringRepository.findRingByName("Narya")).thenReturn(narya);
@@ -110,7 +111,7 @@ public class MapAssertionsTest {
 	}
 
 	@Test
-	public void oneRingsShouldBeNaryaNenyaAndVilyaAndNotOneRing() {
+	public void threeRingsShouldBeNaryaNenyaAndVilyaAndNotOneRing() {
 
 		// given
 		when(ringRepository.findRingByName("Narya")).thenReturn(narya);
