@@ -103,7 +103,7 @@ public class BasicAssertionsTest {
     }
 
     @Test
-    public void frodosNamesShouldStartWithFroAndEndWithDo() {
+    public void frodosNameShouldStartWithFroAndEndWithDo() {
 
         assertTrue(frodo.getName().startsWith("Fro"));
         assertTrue(frodo.getName().endsWith("do"));

@@ -75,7 +75,7 @@ public class CollectionAssertionsTest {
 	}
 
 	@Test
-	public void foundHeroesShouldContainFrodoAndGandalfAndNotSauron() {
+	public void foundHeroesShouldContainFrodoAndGandalfAndNotSauronOrElrond() {
 
 		// given
 		when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
