@@ -2,17 +2,14 @@ package com.github.lpandzic;
 
 import static com.github.lpandzic.tolkien.Race.HOBBIT;
 import static com.github.lpandzic.tolkien.Race.MAIAR;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.BDDAssertions.then;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 
+import com.github.lpandzic.tolkien.Character;
+import org.assertj.core.api.BDDSoftAssertions;
 import org.junit.Before;
 import org.junit.Test;
-import com.github.lpandzic.tolkien.Character;
 
 public class MiscAssertionsTest {
 
@@ -31,8 +28,7 @@ public class MiscAssertionsTest {
     @Test
     public void frodoShouldBeYoungerThanGandalfButOlderThanSam() {
 
-        assertTrue(frodo.getBirthday().isAfter(gandalf.getBirthday()));
-        assertTrue(frodo.getBirthday().isBefore(sam.getBirthday()));
+        then(frodo.getBirthday()).isAfter(gandalf.getBirthday()).isBefore(sam.getBirthday());
     }
 
     @Test
@@ -41,8 +37,7 @@ public class MiscAssertionsTest {
         LocalTime noon = LocalTime.of(12, 0);
         LocalTime secondAfterNoon = LocalTime.of(12, 0, 1);
 
-        assertEquals(noon.getHour(), secondAfterNoon.getHour());
-        assertEquals(noon.getMinute(), secondAfterNoon.getMinute());
+        then(noon).isEqualToIgnoringSeconds(secondAfterNoon);
     }
 
     /**
@@ -51,19 +46,21 @@ public class MiscAssertionsTest {
     @Test
     public void frodoShouldBeOfSameRaceAsSamButNotGandalf() {
 
-        assertTrue(frodo.getRace().equals(sam.getRace()));
-        assertFalse(frodo.getRace().equals(gandalf.getRace()));
+        BDDSoftAssertions softly = new BDDSoftAssertions();
+        softly.then(frodo.getRace()).isEqualTo(sam.getRace());
+        softly.then(frodo.getRace()).isNotEqualTo(gandalf.getRace());
+        softly.assertAll();
     }
 
     @Test
     public void frodoAndSamShouldBeEqualIgnoringAllFieldsExceptRace() {
 
-        assertTrue(frodo.getRace().equals(sam.getRace()));
+        then(frodo).isEqualToComparingOnlyGivenFields(sam, "race");
     }
 
     @Test
     public void frodoAndSamShouldBeEqualIgnoringAllFieldsExceptRaceUsingNull() {
 
-        assertTrue(frodo.getRace().equals(sam.getRace()));
+        then(frodo).isEqualToIgnoringNullFields(new Character(null, HOBBIT, null));
     }
 }

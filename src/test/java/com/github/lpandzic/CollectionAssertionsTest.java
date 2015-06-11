@@ -5,40 +5,20 @@ import static com.github.lpandzic.tolkien.Race.ELF;
 import static com.github.lpandzic.tolkien.Race.HOBBIT;
 import static com.github.lpandzic.tolkien.Race.MAIAR;
 import static com.github.lpandzic.tolkien.Race.MAN;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.BDDMockito.given;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.time.*;
+import java.util.*;
 
 import com.github.lpandzic.tolkien.Character;
-import com.github.lpandzic.tolkien.CharacterRepository;
-import com.github.lpandzic.tolkien.Race;
-import com.github.lpandzic.tolkien.TolkienService;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import com.github.lpandzic.tolkien.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -77,111 +57,91 @@ public class CollectionAssertionsTest {
 	@Test
 	public void foundHeroesShouldContainFrodoAndGandalfAndNotSauronOrElrond() {
 
-		// given
-		when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
+		given(characterRepository.getFellowshipOfTheRing()).willReturn(fellowshipOfTheRing);
 
 		// when
 		List<Character> heroes = tolkienService.getFellowshipOfTheRing();
 
-		// then
-		assertThat(heroes, hasItems(hasProperty("name", is("Frodo")),
-		                            hasProperty("name", is("Gandalf"))));
-		assertThat(heroes, not(hasItem(hasProperty("name", is("Sauron")))));
-		assertThat(heroes, not(hasItem(hasProperty("name", is("Elrond")))));
+		then(heroes).extracting(Character::getName).contains("Frodo", "Gandalf").doesNotContain("Sauron", "Elrond");
 	}
 
     @Test
     public void foundHeroesShouldContainFrodoAndGandalfAndNotSauronUsingNameComparator() {
 
-        // given
-        when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
+        given(characterRepository.getFellowshipOfTheRing()).willReturn(fellowshipOfTheRing);
 
         // when
         List<Character> heroes = tolkienService.getFellowshipOfTheRing();
 
-        // then
-        assertThat(heroes, hasItems(hasNameUsingComparator("Frodo"),
-                                    hasNameUsingComparator("Gandalf")));
-        assertThat(heroes, not(hasItem(hasNameUsingComparator("Sauron"))));
-        assertThat(heroes, not(hasItem(hasNameUsingComparator("Elrond"))));
+	    then(heroes).usingElementComparator(Character.nameComparator())
+                    .contains(frodo, gandalf)
+                    .doesNotContain(new Character("Sauron", null, null), new Character("Elrond", null, null));
     }
 
 	@Test
 	public void foundHeroesShouldContainFrodoAndGandalfByNameAndRace() {
 
-		// given
-		when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
+		given(characterRepository.getFellowshipOfTheRing()).willReturn(fellowshipOfTheRing);
 
 		// when
 		List<Character> heroes = tolkienService.getFellowshipOfTheRing();
 
-		// then
-		assertThat(heroes, hasItems(hasNameAndRace("Frodo", Race.HOBBIT),
-                                    hasNameAndRace("Gandalf", Race.MAIAR)));
+        then(heroes).extracting(Character::getName, Character::getRace)
+                    .contains(tuple("Frodo", Race.HOBBIT), tuple("Gandalf", Race.MAIAR));
 
 	}
 
 	@Test
 	public void foundHeroesShouldContainFrodoAndGandalf() {
 
-		// given
-		when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
+		given(characterRepository.getFellowshipOfTheRing()).willReturn(fellowshipOfTheRing);
 
 		// when
 		List<Character> heroes = tolkienService.getFellowshipOfTheRing();
 
-		// then
-		assertThat(heroes,
-                   hasItems(new ReflectionEquals(new Character("Frodo",
-                                                               HOBBIT,
-                                                               LocalDate.of(2968, Month.SEPTEMBER, 22))),
-                            new ReflectionEquals(new Character("Gandalf", MAIAR, LocalDate.MIN))));
+        then(heroes).usingFieldByFieldElementComparator()
+                    .contains(frodo, gandalf);
 	}
 
     @Test
     public void shouldOrderFellowshipOfTheRingByName() {
 
-        // given
-        when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
+        given(characterRepository.getFellowshipOfTheRing()).willReturn(fellowshipOfTheRing);
 
         // when
         List<Character> actual = tolkienService.getFellowshipOfTheRingSortedByName();
 
-        // then
-        assertThat(actual,
-                   contains(hasProperty("name", equalTo("Aragorn")),
-                            hasProperty("name", equalTo("Boromir")),
-                            hasProperty("name", equalTo("Frodo")),
-                            hasProperty("name", equalTo("Gandalf")),
-                            hasProperty("name", equalTo("Gimli")),
-                            hasProperty("name", equalTo("Legolas")),
-                            hasProperty("name", equalTo("Merry")),
-                            hasProperty("name", equalTo("Pippin")),
-                            hasProperty("name", equalTo("Sam"))));
+        then(actual).extracting(Character::getName).containsExactly("Aragorn",
+                                                                    "Boromir",
+                                                                    "Frodo",
+                                                                    "Gandalf",
+                                                                    "Gimli",
+                                                                    "Legolas",
+                                                                    "Merry",
+                                                                    "Pippin",
+                                                                    "Sam");
     }
 
     @Test
     public void shouldSortFellowshipOfTheRingByAge() {
 
-        // given
-        when(characterRepository.getFellowshipOfTheRing()).thenReturn(fellowshipOfTheRing);
-        when(clock.instant()).thenReturn(Instant.now());
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
+        given(characterRepository.getFellowshipOfTheRing()).willReturn(fellowshipOfTheRing);
+        given(clock.instant()).willReturn(Instant.now());
+        given(clock.getZone()).willReturn(ZoneId.systemDefault());
 
         // when
         List<Character> actual = tolkienService.getFellowshipOfTheRingSortedByAge();
 
-        // then
-        assertThat(actual,
-                   contains(hasProperty("name", equalTo("Gandalf")),
-                            hasProperty("name", equalTo("Gimli")),
-                            hasProperty("name", equalTo("Aragorn")),
-                            hasProperty("name", equalTo("Frodo")),
-                            hasProperty("name", equalTo("Boromir")),
-                            hasProperty("name", equalTo("Sam")),
-                            hasProperty("name", equalTo("Merry")),
-                            hasProperty("name", equalTo("Pippin")),
-                            hasProperty("name", equalTo("Legolas"))));
+        then(actual).extracting(Character::getName)
+                    .containsExactly("Gandalf",
+                                     "Gimli",
+                                     "Aragorn",
+                                     "Frodo",
+                                     "Boromir",
+                                     "Sam",
+                                     "Merry",
+                                     "Pippin",
+                                     "Legolas");
     }
 
     @Test
@@ -201,44 +161,7 @@ public class CollectionAssertionsTest {
 
         List<Player> reallyGoodPlayers = Arrays.asList(jordan, magic);
 
-        // then
-        List<Player> teammates = reallyGoodPlayers.stream()
-                                                .flatMap(player -> player.getTeammates().stream())
-                                                .collect(Collectors.toList());
-		assertThat(teammates, contains(pippen, kukoc, jabbar, worthy));
-	}
-
-	private Matcher<Character> hasNameAndRace(String name, Race race) {
-
-		return new TypeSafeMatcher<Character>() {
-			@Override
-			public void describeTo(Description description) {
-
-				description.appendText(String.format(" has name %s and race %s", name, race));
-			}
-
-			@Override
-			protected boolean matchesSafely(Character item) {
-
-				return Objects.equals(name, item.getName()) && Objects.equals(race, item.getRace());
-			}
-		};
-	}
-
-    private Matcher<Character> hasNameUsingComparator(String name) {
-
-        return new TypeSafeMatcher<Character>() {
-            @Override
-            public void describeTo(Description description) {
-
-                description.appendText(String.format(" has name %s ", name));
-            }
-
-            @Override
-            protected boolean matchesSafely(Character item) {
-
-                return item.getName().compareTo(name) == 0;
-            }
-        };
+        then(reallyGoodPlayers).flatExtracting(Player::getTeammates)
+                               .contains(pippen, kukoc, jabbar, worthy);
     }
 }

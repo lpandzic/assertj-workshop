@@ -3,22 +3,15 @@ package com.github.lpandzic;
 import static com.github.lpandzic.tolkien.Race.ELF;
 import static com.github.lpandzic.tolkien.Race.HOBBIT;
 import static com.github.lpandzic.tolkien.Race.MAIAR;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.hasValue;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.BDDMockito.given;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Map;
 
-import com.github.lpandzic.tolkien.Ring;
 import com.github.lpandzic.tolkien.Character;
-import com.github.lpandzic.tolkien.CharacterRepository;
-import com.github.lpandzic.tolkien.RingRepository;
-import com.github.lpandzic.tolkien.TolkienService;
+import com.github.lpandzic.tolkien.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,67 +62,57 @@ public class MapAssertionsTest {
 	@Test
 	public void threeRingsShouldBeBearedByGandalfElrondAndGaladrielAndNotFrodo() {
 
-		// given
-		when(ringRepository.findRingByName("Narya")).thenReturn(narya);
-		when(ringRepository.findRingByName("Nenya")).thenReturn(nenya);
-		when(ringRepository.findRingByName("Vilya")).thenReturn(vilya);
-		when(ringRepository.findRingByName("One Ring")).thenReturn(oneRing);
-		when(characterRepository.findCharacterByName("Elrond")).thenReturn(elrond);
-		when(characterRepository.findCharacterByName("Galadriel")).thenReturn(galadriel);
-		when(characterRepository.findCharacterByName("Frodo")).thenReturn(frodo);
-		when(characterRepository.findCharacterByName("Gandalf")).thenReturn(gandalf);
+		given(ringRepository.findRingByName("Narya")).willReturn(narya);
+		given(ringRepository.findRingByName("Nenya")).willReturn(nenya);
+		given(ringRepository.findRingByName("Vilya")).willReturn(vilya);
+		given(ringRepository.findRingByName("One Ring")).willReturn(oneRing);
+		given(characterRepository.findCharacterByName("Elrond")).willReturn(elrond);
+		given(characterRepository.findCharacterByName("Galadriel")).willReturn(galadriel);
+		given(characterRepository.findCharacterByName("Frodo")).willReturn(frodo);
+		given(characterRepository.findCharacterByName("Gandalf")).willReturn(gandalf);
 
 		// when
 		Map<Ring, Character> threeRingBearers = tolkienService.getThreeRingsPairedWithBearers();
 
-		// then
-		assertThat(threeRingBearers, hasEntry(narya, gandalf));
-		assertThat(threeRingBearers, hasEntry(nenya, galadriel));
-		assertThat(threeRingBearers, hasEntry(vilya, elrond));
-		assertThat(threeRingBearers, not(hasEntry(frodo, oneRing)));
+		then(threeRingBearers).containsEntry(narya, gandalf)
+		                      .containsEntry(nenya, galadriel)
+		                      .containsEntry(vilya, elrond)
+		                      .doesNotContainEntry(oneRing, frodo);
 	}
 
 	@Test
 	public void gandalfAndGaladrielShouldBeOneOfTheThreeRingBearers() {
 
-		// given
-		when(ringRepository.findRingByName("Narya")).thenReturn(narya);
-		when(ringRepository.findRingByName("Nenya")).thenReturn(nenya);
-		when(ringRepository.findRingByName("Vilya")).thenReturn(vilya);
-		when(ringRepository.findRingByName("One Ring")).thenReturn(oneRing);
-		when(characterRepository.findCharacterByName("Elrond")).thenReturn(elrond);
-		when(characterRepository.findCharacterByName("Galadriel")).thenReturn(galadriel);
-		when(characterRepository.findCharacterByName("Frodo")).thenReturn(frodo);
-		when(characterRepository.findCharacterByName("Gandalf")).thenReturn(gandalf);
+		given(ringRepository.findRingByName("Narya")).willReturn(narya);
+		given(ringRepository.findRingByName("Nenya")).willReturn(nenya);
+		given(ringRepository.findRingByName("Vilya")).willReturn(vilya);
+		given(ringRepository.findRingByName("One Ring")).willReturn(oneRing);
+		given(characterRepository.findCharacterByName("Elrond")).willReturn(elrond);
+		given(characterRepository.findCharacterByName("Galadriel")).willReturn(galadriel);
+		given(characterRepository.findCharacterByName("Frodo")).willReturn(frodo);
+		given(characterRepository.findCharacterByName("Gandalf")).willReturn(gandalf);
 
 		// when
 		Map<Ring, Character> threeRingBearers = tolkienService.getThreeRingsPairedWithBearers();
 
-		// then
-		assertThat(threeRingBearers, hasValue(gandalf));
-		assertThat(threeRingBearers, hasValue(galadriel));
+		then(threeRingBearers).containsValues(gandalf, galadriel);
 	}
 
 	@Test
 	public void threeRingsShouldBeNaryaNenyaAndVilyaAndNotOneRing() {
 
-		// given
-		when(ringRepository.findRingByName("Narya")).thenReturn(narya);
-		when(ringRepository.findRingByName("Nenya")).thenReturn(nenya);
-		when(ringRepository.findRingByName("Vilya")).thenReturn(vilya);
-		when(ringRepository.findRingByName("One Ring")).thenReturn(oneRing);
-		when(characterRepository.findCharacterByName("Elrond")).thenReturn(elrond);
-		when(characterRepository.findCharacterByName("Galadriel")).thenReturn(galadriel);
-		when(characterRepository.findCharacterByName("Frodo")).thenReturn(frodo);
-		when(characterRepository.findCharacterByName("Gandalf")).thenReturn(gandalf);
+		given(ringRepository.findRingByName("Narya")).willReturn(narya);
+		given(ringRepository.findRingByName("Nenya")).willReturn(nenya);
+		given(ringRepository.findRingByName("Vilya")).willReturn(vilya);
+		given(ringRepository.findRingByName("One Ring")).willReturn(oneRing);
+		given(characterRepository.findCharacterByName("Elrond")).willReturn(elrond);
+		given(characterRepository.findCharacterByName("Galadriel")).willReturn(galadriel);
+		given(characterRepository.findCharacterByName("Frodo")).willReturn(frodo);
+		given(characterRepository.findCharacterByName("Gandalf")).willReturn(gandalf);
 
 		// when
 		Map<Ring, Character> threeRingBearers = tolkienService.getThreeRingsPairedWithBearers();
 
-		// then
-		assertThat(threeRingBearers, hasKey(narya));
-		assertThat(threeRingBearers, hasKey(nenya));
-		assertThat(threeRingBearers, hasKey(vilya));
-		assertThat(threeRingBearers, not(hasKey(oneRing)));
+		then(threeRingBearers).containsKeys(narya, nenya, vilya).doesNotContainKey(oneRing);
 	}
 }

@@ -1,21 +1,14 @@
 package com.github.lpandzic;
 
-import com.github.lpandzic.tolkien.Character;
-
 import static com.github.lpandzic.tolkien.Race.HOBBIT;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.github.lpandzic.tolkien.Character;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,56 +38,55 @@ public class BasicAssertionsTest {
 
         SimpleCharacter character = null;
 
-        assertNull(character);
+        then(character).isNull();
     }
 
     @Test
     public void frodoShouldHaveAName() {
 
-        assertNotNull(frodo.getName());
+        then(frodo.getName()).isNotNull();
     }
 
     @Test
     public void fellowshipOfTheRingShouldContainFrodo() {
 
-        assertTrue(fellowshipOfTheRing.contains(frodo));
+        then(fellowshipOfTheRing).contains(frodo);
     }
 
     @Test
     public void shouldBeEqual() {
 
-        assertEquals(frodo, new SimpleCharacter("Frodo"));
+        then(frodo).isEqualTo(new SimpleCharacter("Frodo"));
     }
 
     @Test
     public void shouldBeEmpty() {
 
-        assertEquals(0, new ArrayList<>().size());
+        then(new ArrayList<>()).isEmpty();
     }
 
     @Test
     public void fellowshipOfTheRingShouldHaveNineMembers() {
 
-        assertEquals(9, fellowshipOfTheRing.size());
+        then(fellowshipOfTheRing).hasSize(9);
     }
 
     @Test
     public void shouldBeEqualArrays() {
 
-        assertArrayEquals(new int[]{}, new int[]{});
+        then(new int[]{}).isEqualTo(new int[]{});
     }
 
     @Test
     public void shouldBeSame() {
 
-        assertSame(fellowshipOfTheRing, fellowshipOfTheRing);
+        then(fellowshipOfTheRing).isSameAs(fellowshipOfTheRing);
     }
 
     @Test
     public void frodosNameShouldStartWithFroAndEndWithDo() {
 
-        assertTrue(frodo.getName().startsWith("Fro"));
-        assertTrue(frodo.getName().endsWith("do"));
+        then(frodo.getName()).startsWith("Fro").endsWith("do");
     }
 
     @Test
@@ -103,7 +95,7 @@ public class BasicAssertionsTest {
         Character frodo = new Character("Frodo", HOBBIT, LocalDate.of(2968, Month.SEPTEMBER, 22));
         Character sam = new Character("Sam", HOBBIT, LocalDate.of(2980, Month.APRIL, 6));
 
-        assertNotEquals(0, Character.nameComparator().compare(frodo, sam));
+        then(frodo).usingComparator(Character.nameComparator()).isNotEqualTo(sam);
     }
 
     @Test
@@ -112,6 +104,6 @@ public class BasicAssertionsTest {
         Character frodo = new Character("Frodo", HOBBIT, LocalDate.of(2968, Month.SEPTEMBER, 22));
         Character sam = new Character("Sam", HOBBIT, LocalDate.of(2980, Month.APRIL, 6));
 
-        assertEquals(0, Character.raceComparator().compare(frodo, sam));
+        then(frodo).usingComparator(Character.raceComparator()).isEqualTo(sam);
     }
 }

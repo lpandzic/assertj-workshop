@@ -1,13 +1,9 @@
 package com.github.lpandzic;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import com.github.lpandzic.tolkien.Character;
-import com.github.lpandzic.tolkien.CharacterRepository;
-import com.github.lpandzic.tolkien.Magical;
-import com.github.lpandzic.tolkien.Ring;
+import com.github.lpandzic.tolkien.*;
 import org.junit.Test;
 
 public class ReflectionAssertionsTest {
@@ -15,32 +11,30 @@ public class ReflectionAssertionsTest {
     @Test
     public void characterRepositoryShouldBeAnInterface() {
 
-        assertTrue(CharacterRepository.class.isInterface());
+        then(CharacterRepository.class).isInterface();
     }
 
     @Test
     public void magicalShouldBeAnAnnotation() {
 
-        assertTrue(Magical.class.isAnnotation());
+        then(Magical.class).isAnnotation();
     }
 
     @Test
     public void ringShouldNotBeAnAnnotationNorInterface() {
 
-        assertFalse(Ring.class.isAnnotation());
-        assertFalse(Ring.class.isInterface());
+        then(Ring.class).isNotAnnotation().isNotInterface();
     }
 
     @Test
     public void ringShouldBeMagical() {
 
-        assertTrue(Ring.class.isAnnotationPresent(Magical.class));
+        then(Ring.class).hasAnnotation(Magical.class);
     }
 
     @Test
     public void characterShouldHaveNameAndRaceFields() throws NoSuchFieldException {
 
-        assertNotNull(Character.class.getDeclaredField("name"));
-        assertNotNull(Character.class.getDeclaredField("race"));
+        then(Character.class).hasDeclaredFields("name", "race");
     }
 }
