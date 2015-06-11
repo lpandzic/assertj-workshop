@@ -9,10 +9,12 @@ Some of the examples are similar to the ones provided in the AssertJ official do
 
 Flow:
 
-1. Examine in each test in the test package, ideally following test classes in alphabetical order.
+1. Examine each test, ideally following test classes in alphabetical order.
 2. Replace every JUnit/Hamcrest assertion with AssertJ assertion, most of the multiline assertions can be replaced with one line AssertJ assertion.
 3. Refactor all tests to use BDD API of [AssertJ][bdd-assertj] and [Mockito][bdd-mockito].
 4. Have fun!
+
+One of the possible solutions can be found in solution branch.
 
 [infobip-devdays]: http://www.infobip.com/dev-days/
 [hamcrest]: http://hamcrest.org/
